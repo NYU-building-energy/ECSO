@@ -20,7 +20,7 @@ h3,
 h4,
 h5,
 h6,
-label {
+label, a {
     color: #34495e;
 }
 
