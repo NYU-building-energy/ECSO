@@ -1,38 +1,35 @@
 
-
 var dataset;
 
 
-// d3.csv('data/DOE_reference_bldgs.csv', function(error,data) {
-// 	if (error) {
-// 	  console.log(error);
-// 	} 
-// 	else {
-// 	  console.log(data);
-// 	  dataset = data;
+function updateBuildingDetails(buildingAddress) {
+    
+    var row;
+    for(var i=0; i<dataset.length;i++) {
+        row = dataset[i];
+        if(row.Address == buildingAddress) {
 
-// 	  var dataTable = d3.select('body').select('#buildingTable');
+            var details = d3.select("#buildingDetails");
 
-// 	  var tr = dataTable.select('tbody').selectAll('tr')
-// 		.data(dataset)
-// 		.enter()
-// 		.append('tr');
-// 	  }
 
-// 	 var td = tr.selectAll("td")
-// 	    .data(function(row) {
-// 	        return headers.map(function(d) { console.log(row.properties)
-// 	            return {column: d, value: row.properties[d]};
-// 	        });
-// 	    })
-// 	    .enter()
-// 	    .append("td")
-// 	    .text(function (d) {
-// 	        return d.value;
-//     });
-// })
+            details.select("h2").text(buildingAddress);
+            costStr = "Energy costs before: "+row["Energy Cost per SqFt Before EBCx"]+"<br>Energy costs after: $297,600";
+            details.select("#energyCosts")
+                    .html(costStr);
+
+        }
+    }
+
+
+    console.log(dataset);
+}
+
+
 
 d3.csv('data/DOE_reference_bldgs.csv', function(data) {
+
+    dataset = data;
+
     // the columns you'd like to display
     var columns = ["Address","Building Class", "Sq.Ft.", "Retrofit Costs", "Yearly Savings"];
 
@@ -58,12 +55,24 @@ d3.csv('data/DOE_reference_bldgs.csv', function(data) {
     var cells = rows.selectAll("td")
         .data(function(row) {
             return columns.map(function(column) {
+                // console.log('Column: ',column,"Row: ",row[column]);
                 return {column: column, value: row[column]};
             });
         })
         .enter()
         .append("td")
-            .text(function(d) { return d.value; });
+        .on('click', function(d){
+                updateBuildingDetails(d.value);
+            })
+            .html(function(d) { 
+                if(d.column == 'Address') {
+                    return "<a href='#' >" +d.value+"</a>";
+                }
+                else
+                    return d.value; 
+            })
+            ;
 });
+
 
 
