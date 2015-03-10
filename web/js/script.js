@@ -1,7 +1,5 @@
 
-
 var dataset;
-
 
 // Get the contents of a textbox and checkbox, and alert them to the user
 function changeBuildingClass() {
@@ -11,8 +9,34 @@ function changeBuildingClass() {
         alert("Offices: " + checkOffices.is(":checked"));
     }
 
+function updateBuildingDetails(buildingAddress) {
+    
+    var row;
+    for(var i=0; i<dataset.length;i++) {
+        row = dataset[i];
+        if(row.Address == buildingAddress) {
+
+            var details = d3.select("#buildingDetails");
+
+
+            details.select("h2").text(buildingAddress);
+            costStr = "Energy costs before: "+row["Energy Cost per SqFt Before EBCx"]+"<br>Energy costs after: $297,600";
+            details.select("#energyCosts")
+                    .html(costStr);
+
+        }
+    }
+
+
+    console.log(dataset);
+}
+
+
 
 d3.csv('data/DOE_reference_bldgs.csv', function(data) {
+
+    dataset = data;
+
     // the columns you'd like to display
     var columns = ["Address","Building Class", "Sq.Ft.", "Retrofit Costs", "Yearly Savings"];
 
@@ -38,12 +62,24 @@ d3.csv('data/DOE_reference_bldgs.csv', function(data) {
     var cells = rows.selectAll("td")
         .data(function(row) {
             return columns.map(function(column) {
+                // console.log('Column: ',column,"Row: ",row[column]);
                 return {column: column, value: row[column]};
             });
         })
         .enter()
         .append("td")
-            .text(function(d) { return d.value; });
+        .on('click', function(d){
+                updateBuildingDetails(d.value);
+            })
+            .html(function(d) { 
+                if(d.column == 'Address') {
+                    return "<a href='#' >" +d.value+"</a>";
+                }
+                else
+                    return d.value; 
+            })
+            ;
 });
+
 
 
