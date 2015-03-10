@@ -3,34 +3,14 @@
 var dataset;
 
 
-// d3.csv('data/DOE_reference_bldgs.csv', function(error,data) {
-// 	if (error) {
-// 	  console.log(error);
-// 	} 
-// 	else {
-// 	  console.log(data);
-// 	  dataset = data;
+// Get the contents of a textbox and checkbox, and alert them to the user
+function changeBuildingClass() {
+    var checkOffices = $("#offices");
+    var checkSchools = $("#schools");
+    var checkHealthcare = $("#healthcare");
+        alert("Offices: " + checkOffices.is(":checked"));
+    }
 
-// 	  var dataTable = d3.select('body').select('#buildingTable');
-
-// 	  var tr = dataTable.select('tbody').selectAll('tr')
-// 		.data(dataset)
-// 		.enter()
-// 		.append('tr');
-// 	  }
-
-// 	 var td = tr.selectAll("td")
-// 	    .data(function(row) {
-// 	        return headers.map(function(d) { console.log(row.properties)
-// 	            return {column: d, value: row.properties[d]};
-// 	        });
-// 	    })
-// 	    .enter()
-// 	    .append("td")
-// 	    .text(function (d) {
-// 	        return d.value;
-//     });
-// })
 
 d3.csv('data/DOE_reference_bldgs.csv', function(data) {
     // the columns you'd like to display
