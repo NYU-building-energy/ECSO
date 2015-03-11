@@ -3,6 +3,17 @@ var MAX_PAYOFF_YEARS = 6;
 
 var dataset;
 
+/**
+ * Number.prototype.format(n, x)
+ * 
+ * @param integer n: length of decimal
+ * @param integer x: length of sections
+ */
+Number.prototype.format = function(n, x) {
+    var re = '\\d(?=(\\d{' + (x || 3) + '})+' + (n > 0 ? '\\.' : '$') + ')';
+    return this.toFixed(Math.max(0, ~~n)).replace(new RegExp(re, 'g'), '$&,');
+};
+
 
 // Get the contents of a textbox and checkbox, and alert them to the user
 function changeBuildingClass() {
@@ -13,8 +24,8 @@ function changeBuildingClass() {
     }
 
 //Initializes the payback bar with a default value
-function makePaybackBar() {
-    svg = d3.select("#paybackBar").select("svg");
+function makePaybackBar(paybackbarID) {
+    svg = d3.select(paybackbarID).select("svg");
 
     leftPoint = svg.attr("bar-left");
     
@@ -55,8 +66,8 @@ function makePaybackBar() {
 }
 
 //Updates the payback bar with the expected payback period given
-function updatePaybackBar(paybackPeriod){
-    svg = d3.select("#paybackBar").select("svg");
+function updatePaybackBar(paybackPeriod, paybackbarID){
+    svg = d3.select(paybackbarID).select("svg");
 
     leftPoint = svg.attr("bar-left");
 
@@ -85,22 +96,58 @@ function updateBuildingDetails(buildingAddress) {
     }
     var details = d3.select("#buildingDetails");
 
+    console.log(buildingAddress)
 
+    // ------------------------------------------------------
+    //  EBCx retrofits
     details.select("h2").text(buildingAddress);
-    costStr = "Energy costs before: "+row["Energy Cost per SqFt Before EBCx"]+"<br>Energy costs after: $297,600";
-    details.select("#energyCosts")
-            .html(costStr);
-
+    
     var cost = row["Retrofit Costs"].replace("$","").replace(",","");
     var savings = row["Yearly Savings"].replace("$","").replace(",","");
+    
+    // for paybackbar
     var numer = parseInt( cost );
     var denom = parseInt(savings);
 
-    console.log();
+    var energyCostsBefore = parseFloat(row["Energy Cost per SqFt Before EBCx"])*parseFloat(row["Sq.Ft."]);
+    var EBCxEnergyCostsAfter = parseFloat(row["Energy Cost per SqFt After EBCx"])*parseFloat(row["Sq.Ft."]);
 
-    updatePaybackBar(numer/denom);
+    costStr = "<p>Energy costs before: $"+ energyCostsBefore.format(2) +"<br>" +
+                "Energy costs after: $" + EBCxEnergyCostsAfter.format(2) +"</p>" +
+                "<p>Retrofit Costs (one-time): " + row["Retrofit Costs"] + "</p>" +
+                "<h2>Yearly Savings: " + row["Yearly Savings"] + "</h2>";
 
-    console.log(dataset);
+
+    details.select("#energyCosts")
+            .html(costStr);
+
+    updatePaybackBar(numer/denom, "#paybackBar");
+
+    // ------------------------------------------------------
+    //  Standard retrofits
+    var StdDetails = d3.select("#buildingDetailsStandard");
+
+    var StdRetrofitCosts = parseFloat(row["Standard Retrofit Cost per SqFt"])*parseFloat(row["Sq.Ft."]);
+    var StdRetrofitCosts2 = row["Standard Retrofit Cost"];
+    var StdEnergyCostsAfter = parseFloat(row["Energy Cost per SqFt After EBCx"])*parseFloat(row["Sq.Ft."]);
+    // for paybackbar
+    savings = row["Standard Yearly Savings"].replace("$","").replace(",","");
+    numer = parseInt( StdRetrofitCosts );
+    denom = parseInt(savings);
+
+
+    costStrStd = "<p>Energy costs before: $"+ energyCostsBefore.format(2) + "<br>" +
+                "Energy costs after: $" + EBCxEnergyCostsAfter.format(2) + "(" + StdRetrofitCosts2 + ")</p>" +
+                "<p>Retrofit Costs (one-time): $" + StdRetrofitCosts.format(2) + "</p>" +
+                "<h2>Yearly Savings: " + row["Standard Yearly Savings"] + "</h2>";
+
+
+    StdDetails.select("#energyCostsStandard")
+            .html(costStrStd);
+
+    updatePaybackBar(numer/denom, "#paybackBarStandard");
+
+    //console.log(dataset);
 }
 
 
@@ -108,6 +155,10 @@ function updateBuildingDetails(buildingAddress) {
 d3.csv('data/DOE_reference_bldgs.csv', function(data) {
 
     dataset = data;
+
+    // created filtered data
+    // var filteredData;
+
 
     // the columns you'd like to display
     var columns = ["Address","Building Class", "Sq.Ft.", "Retrofit Costs", "Yearly Savings"];
@@ -153,7 +204,8 @@ d3.csv('data/DOE_reference_bldgs.csv', function(data) {
             ;
 });
 
-makePaybackBar();
+makePaybackBar("#paybackBar");
+makePaybackBar("#paybackBarStandard");
 
 
 

@@ -5,6 +5,14 @@
 }
 
 /*
+ * -- STYLES ADDED BY RENATE --
+ */
+.spuperimportant {
+    font-size: 16px;
+    font-weight: bold;
+}
+
+/*
  * -- BASE STYLES --
  * Most of these are inherited from Base, but I want to change a few.
  */
@@ -27,6 +35,10 @@ label, a {
 .pure-img-responsive {
     max-width: 100%;
     height: auto;
+}
+
+h3 {
+    color: #1f8dd6;
 }
 
 /*
@@ -75,6 +87,7 @@ label, a {
     color: white;
     padding: 0.5em 2em;
     border-radius: 5px;
+    margin-bottom: 0.5em;
 }
 
 a.pure-button-primary {
