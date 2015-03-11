@@ -12,6 +12,7 @@ function changeBuildingClass() {
         alert("Offices: " + checkOffices.is(":checked"));
     }
 
+//Initializes the payback bar with a default value
 function makePaybackBar() {
     svg = d3.select("#paybackBar").select("svg");
 
@@ -42,18 +43,18 @@ function makePaybackBar() {
         .append("circle")
         .attr("cx",leftPoint)
         .attr("cy", svg.attr("height")/3 + 3)
-        .attr("r",8);
+        .attr("r",9);
 
     svg.select("g.highlight_bar")
         .append("line")
         .attr("x1",leftPoint)
         .attr("y1", svg.attr("height")/3 + 3)
-        .attr("x2",x(7)+leftPoint)
+        .attr("x2",x(.46)+leftPoint)
         .attr("y2", svg.attr("height")/3 + 3);
 
-    //                         <line x1="10" y1="25" x2="100" y2="25" />
 }
 
+//Updates the payback bar with the expected payback period given
 function updatePaybackBar(paybackPeriod){
     svg = d3.select("#paybackBar").select("svg");
 
@@ -72,6 +73,7 @@ function updatePaybackBar(paybackPeriod){
         .attr("y2", svg.attr("height")/3 + 3);
 }
 
+//Update the building details box displayed in ECSO
 function updateBuildingDetails(buildingAddress) {
     
     var row;
@@ -91,7 +93,6 @@ function updateBuildingDetails(buildingAddress) {
 
     var cost = row["Retrofit Costs"].replace("$","").replace(",","");
     var savings = row["Yearly Savings"].replace("$","").replace(",","");
-
     var numer = parseInt( cost );
     var denom = parseInt(savings);
 
