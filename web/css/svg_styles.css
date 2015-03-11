@@ -4,15 +4,15 @@
 	stroke-width: 2;
 }
 
-.base_bar circle{
+.base_bar circle {
 	fill: #000;
 }
 
-.highlight_bar line{
+.highlight_bar line {
 	stroke: #00A5D9;
 	stroke-width: 5;
 }
 
-.highlight_bar circle{
+.highlight_bar circle {
 	fill: #00A5D9;
 }

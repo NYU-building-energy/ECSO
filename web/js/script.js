@@ -67,21 +67,28 @@ function makePaybackBar(paybackbarID) {
 
 //Updates the payback bar with the expected payback period given
 function updatePaybackBar(paybackPeriod, paybackbarID){
+    //console.log("paybackPeriod:", paybackPeriod)
+
     svg = d3.select(paybackbarID).select("svg");
 
-    leftPoint = svg.attr("bar-left");
+    if(!isNaN(paybackPeriod)) {
+        leftPoint = svg.attr("bar-left");
 
-    var x = d3.scale.linear()
-          .domain([0, MAX_PAYOFF_YEARS])
-          .range([0, svg.attr("width")]);
+        var x = d3.scale.linear()
+              .domain([0, MAX_PAYOFF_YEARS])
+              .range([0, svg.attr("width")]);
 
-    console.log(leftPoint, paybackPeriod, x(paybackPeriod) )
+        //console.log(leftPoint, paybackPeriod, x(paybackPeriod) )
 
-    svg.select("g.highlight_bar").select("line")
-        .attr("x1",leftPoint)
-        .attr("y1", svg.attr("height")/3 + 3)
-        .attr("x2",x(paybackPeriod)+leftPoint)
-        .attr("y2", svg.attr("height")/3 + 3);
+        svg.select("g.highlight_bar").select("line")
+            .attr("x1",leftPoint)
+            .attr("y1", svg.attr("height")/3 + 3)
+            .attr("x2",x(paybackPeriod)+leftPoint)
+            .attr("y2", svg.attr("height")/3 + 3);
+        svg.style("visibility", "visible");
+    } else {
+        svg.style("visibility", "hidden");
+    }
 }
 
 //Update the building details box displayed in ECSO
@@ -96,7 +103,7 @@ function updateBuildingDetails(buildingAddress) {
     }
     var details = d3.select("#buildingDetails");
 
-    console.log(buildingAddress)
+    //console.log(buildingAddress)
 
     // ------------------------------------------------------
     //  EBCx retrofits
@@ -128,7 +135,6 @@ function updateBuildingDetails(buildingAddress) {
     var StdDetails = d3.select("#buildingDetailsStandard");
 
     var StdRetrofitCosts = parseFloat(row["Standard Retrofit Cost per SqFt"])*parseFloat(row["Sq.Ft."]);
-    var StdRetrofitCosts2 = row["Standard Retrofit Cost"];
     var StdEnergyCostsAfter = parseFloat(row["Energy Cost per SqFt After EBCx"])*parseFloat(row["Sq.Ft."]);
     // for paybackbar
     savings = row["Standard Yearly Savings"].replace("$","").replace(",","");
@@ -137,7 +143,7 @@ function updateBuildingDetails(buildingAddress) {
 
 
     costStrStd = "<p>Energy costs before: $"+ energyCostsBefore.format(2) + "<br>" +
-                "Energy costs after: $" + EBCxEnergyCostsAfter.format(2) + "(" + StdRetrofitCosts2 + ")</p>" +
+                "Energy costs after: $" + StdEnergyCostsAfter.format(2) + "</p>" +
                 "<p>Retrofit Costs (one-time): $" + StdRetrofitCosts.format(2) + "</p>" +
                 "<h2>Yearly Savings: " + row["Standard Yearly Savings"] + "</h2>";
 
@@ -146,6 +152,40 @@ function updateBuildingDetails(buildingAddress) {
             .html(costStrStd);
 
     updatePaybackBar(numer/denom, "#paybackBarStandard");
+
+
+    // ------------------------------------------------------
+    //  deep retrofits
+
+    var DeepDetails = d3.select("#buildingDetailsDeep");
+
+    //var DeepRetrofitCosts = parseFloat(row["Deep Retrofit Cost"]);
+    var DeepRetrofitCosts = parseFloat(row["Deep Retrofit Cost"].replace("$","").replace(",","").replace(",",""));
+    //console.log("DeepRetrofitCosts:", DeepRetrofitCosts);
+    // not available for deep:
+    // var StdEnergyCostsAfter = parseFloat(row["Energy Cost per SqFt After EBCx"])*parseFloat(row["Sq.Ft."]);
+    
+    // for paybackbar
+    DeepSavings = row["Deep Yearly Savings"].replace("$","").replace(",","");
+    numer = parseInt(DeepRetrofitCosts);
+    denom = parseInt(DeepSavings);
+
+
+    if(!isNaN(DeepRetrofitCosts)) {
+        costStrDeep = "<p>Retrofit Costs (one-time): $" + DeepRetrofitCosts.format(2) + "</p>" +
+                    "<h2>Yearly Savings: " + row["Deep Yearly Savings"] + "</h2>";
+    } else {
+        costStrDeep = "(not available for this building class)";
+    }
+
+    DeepDetails.select("#energyCostsDeep")
+            .html(costStrDeep);
+
+    updatePaybackBar(numer/denom, "#paybackBarDeep");
+
+    details.style("visibility", "visible");
+    StdDetails.style("visibility", "visible");
+    DeepDetails.style("visibility", "visible");
 
     //console.log(dataset);
 }
@@ -206,6 +246,7 @@ d3.csv('data/DOE_reference_bldgs.csv', function(data) {
 
 makePaybackBar("#paybackBar");
 makePaybackBar("#paybackBarStandard");
+makePaybackBar("#paybackBarDeep");
 
 
 
