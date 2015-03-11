@@ -9,7 +9,7 @@ function changeBuildingClass() {
     var checkOffices = $("#offices");
     var checkSchools = $("#schools");
     var checkHealthcare = $("#healthcare");
-        alert("Offices: " + checkOffices.is(":checked"));
+        alert("Offices: " + checkOffices.is(":checked") + "\nSchools: " + checkSchools.is(":checked") + "\ncheckHealthcare: " + checkHealthcare.is(":checked"));
     }
 
 function makePaybackBar() {
