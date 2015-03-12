@@ -1,5 +1,5 @@
 
-var MAX_PAYOFF_YEARS = 6;
+var MAX_PAYOFF_YEARS = 9;
 
 var dataset;
 
@@ -20,8 +20,11 @@ function changeBuildingClass() {
     var checkOffices = $("#offices");
     var checkSchools = $("#schools");
     var checkHealthcare = $("#healthcare");
-        alert("Offices: " + checkOffices.is(":checked") + "\nSchools: " + checkSchools.is(":checked") + "\ncheckHealthcare: " + checkHealthcare.is(":checked"));
-    }
+
+    fillTable(checkHealthcare.is(":checked"),
+        checkOffices.is(":checked"),
+        checkSchools.is(":checked"));
+};
 
 //Initializes the payback bar with a default value
 function makePaybackBar(paybackbarID) {
@@ -35,7 +38,7 @@ function makePaybackBar(paybackbarID) {
 
     var xAxis = d3.svg.axis()
         .scale(x)
-        .tickValues([1,2,3,4,5,6])
+        .tickValues([1,2,3,4,5,6,7,8])
         .orient("bottom");
 
     var ax = svg.select("g.base_bar")
@@ -63,7 +66,7 @@ function makePaybackBar(paybackbarID) {
         .attr("x2",x(.46)+leftPoint)
         .attr("y2", svg.attr("height")/3 + 3);
 
-}
+};
 
 //Updates the payback bar with the expected payback period given
 function updatePaybackBar(paybackPeriod, paybackbarID){
@@ -89,7 +92,7 @@ function updatePaybackBar(paybackPeriod, paybackbarID){
     } else {
         svg.style("visibility", "hidden");
     }
-}
+};
 
 //Update the building details box displayed in ECSO
 function updateBuildingDetails(buildingAddress) {
@@ -188,24 +191,36 @@ function updateBuildingDetails(buildingAddress) {
     DeepDetails.style("visibility", "visible");
 
     //console.log(dataset);
-}
+};
 
 
+function fillTable(showHealthcare,showOffice,showSchool) {
+    displayList = [];
+    if(showHealthcare) displayList.push("Healthcare");
+    if(showOffice) displayList.push("Office");
+    if(showSchool) displayList.push("School");
 
-d3.csv('data/DOE_reference_bldgs.csv', function(data) {
-
-    dataset = data;
-
-    // created filtered data
-    // var filteredData;
+    console.log(displayList);
+     // created filtered data
+    var filteredData = []
+    for(var i=0;i<dataset.length;i++) {
+        row = dataset[i];
+        console.log($.inArray(row["Building Class"],displayList));
+        if($.inArray(row["Building Class"],displayList) >= 0) {
+            filteredData.push(row);
+        }
+    }
 
 
     // the columns you'd like to display
     var columns = ["Address","Building Class", "Sq.Ft.", "Retrofit Costs", "Yearly Savings"];
 
-    var table = d3.select('body').select('#buildingTable'),
-        thead = table.append("thead"),
-        tbody = table.append("tbody");
+    var table = d3.select('#buildingTable');
+    table.select("thead").remove();
+    table.select("tbody").remove();
+
+    thead = table.append("thead");
+    tbody = table.append("tbody");
 
     // append the header row
     thead.append("tr")
@@ -217,7 +232,7 @@ d3.csv('data/DOE_reference_bldgs.csv', function(data) {
 
     // create a row for each object in the data
     var rows = tbody.selectAll("tr")
-        .data(data)
+        .data(filteredData)
         .enter()
         .append("tr");
 
@@ -240,8 +255,16 @@ d3.csv('data/DOE_reference_bldgs.csv', function(data) {
                 }
                 else
                     return d.value; 
-            })
-            ;
+            });
+};
+
+
+
+d3.csv('data/DOE_reference_bldgs.csv', function(data) {
+
+    dataset = data;
+
+    fillTable(true,true,true);   
 });
 
 makePaybackBar("#paybackBar");
