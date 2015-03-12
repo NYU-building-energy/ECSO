@@ -45,7 +45,9 @@
 <div class="content-wrapper">
     
     <div class="content">
-        <h2 class="content-head is-center">City-owned buildings ranked by yearly savings potential</h2>
+        <h2 class="content-head is-center">NYC City-Owned Buildings Ranked by Yearly Savings Potential<br>
+        <small>(based on EBCx Retrofit Recommendations)</small>
+        </h2>
 
         <div class="pure-g">
             <div class="l-box-lrg pure-u-1 pure-u-md-3-5">
@@ -62,12 +64,15 @@
                
             </table>
 
-            <p><small>Reference building characteristics: Year built pre 1980, Square footage 150,000 to 200,000 sqf, 4 floors, "cold" climate zone (according to US. Dept. of Energy)</small></p>
-
             </div>
 
             <div class="l-box-lrg pure-u-1 pure-u-md-2-5">
+                <div id="toggler">
+                    <small><a href="javascript:toogleExplanation()">Show/hide retrofit info</a></small>
+                </div>
+                
                 <div id="buildingDetails" style="visibility:hidden">
+                    <!--p><small><a href="javascript:toogleExplanation()">Display retrofit info</a></small></p-->
                     <h2>(Address Placeholder)</h2>
                     <h3>Retrofits according to EBCx standard:</h3>
                         <div id="energyCosts">
@@ -111,6 +116,30 @@
                         </svg>
                     </div> 
                 </div>
+
+                <div id="explanation">
+                    <h2>Retrofit Options</h2>
+                    <h3>Retrofits according to EBCx standard:</h3>
+                    <ul>
+                        <li>improve building operations</li>
+                        <li>restructure maintenance procedures</li>
+
+                    </ul>
+
+                    <h3>Standard retrofits:</h3>
+                    <ul>
+                        <li>equipment, system, and assembly retrofits</li>
+                        <li>replace HVAC systems</li>
+                    </ul>
+
+                    <h3>Deep retrofits (offices only):</h3>
+                    <ul>
+                        <li>integrated whole-building design approach</li>
+                    </ul>
+                    <p>&nbsp;</p>
+                    <h2>Reference Buildings</h2>
+                    <p>The ECSO recommendation model is based on reference buildings with the following characteristics: Year built pre 1980, Square footage 150,000 to 200,000 sqf, 4 floors, "cold" climate zone (according to <a href="http://energy.gov/eere/buildings/advanced-energy-retrofit-guides">U.S. Department of Energy</a>)</p>
+                </div>
             </div>
 
 
@@ -124,14 +153,11 @@
             <div class="content">
                 <h3>What's the magic behind ECSO?</h4>
                 <p>
-                    Our ECSO prediction model is trained with open data on savings that were archieved by retrofitting 
-                    City Government buildings within the scope PlaNYC. We computed error margins for these savings by comparing
-                    the estimations with actual Local Law 84 data. Then we predicted the savings for a huge list of 
-                    City-owned or leased properties. Building attributed were derived from the NYC Pluto dataset.
+                    ECSO currently provides retrofitting recommendations for 46 exemplary New York City-owned office buildings, schools and healthcare facilities. Depending on the building class, ECSO offers 2 to 3 retrofit options and corresponding potential yearly savings and payback periods. Our recommendations are based on <a href="http://energy.gov/eere/buildings/advanced-energy-retrofit-guides">retrofit guides by the U.S. Department of Energy</a> that provide reference buildings for different building classes, retrofit options and cost savings. We combined this data with <a href="https://data.cityofnewyork.us/City-Government/City-owned-and-Leased-Property/4e2n-s75z">public building lists</a> and <a href="https://data.cityofnewyork.us/Environment/Energy-and-Water-Data-Disclosure-for-Local-Law-84-/5gde-fmj3">energy data</a> from NYC Open Data. If you have any questions, shoot us an email!
                 </p>
             </div>
             <div class="l-box is-center">
-                <p><small>&copy; 2015. Made with love by the <a href="http://cusp.nyu.edu/">NYU CUSP</a> Urban Social Impact Team <a href="mailto:francoedua@gmail.com">Ed Franco</a>, <a href="mailto:anjmehta92@gmail.com">Anjali Mehta</a>, <a href="mailto:ct1604@nyu.edu">Chris Tull</a> and <a href="mailto:rp2427@nyu.edu">Renate Pinggera</a>.</small></p>
+                <p><small>&copy; 2015. Made with love <!-- and desperation -->by the <a href="http://cusp.nyu.edu/">NYU CUSP</a> Urban Social Impact Team <a href="mailto:francoedua@gmail.com">Ed Franco</a>, <a href="mailto:anjmehta92@gmail.com">Anjali Mehta</a>, <a href="mailto:ct1604@nyu.edu">Chris Tull</a> and <a href="mailto:rp2427@nyu.edu">Renate Pinggera</a>.</small></p>
             </div>
         </div>
 

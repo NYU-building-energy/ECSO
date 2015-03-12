@@ -7,9 +7,11 @@
 /*
  * -- STYLES ADDED BY RENATE --
  */
-.spuperimportant {
-    font-size: 16px;
-    font-weight: bold;
+
+#explanation {
+    background-color: #fff;
+    position: absolute;
+    top: 7%;
 }
 
 /*

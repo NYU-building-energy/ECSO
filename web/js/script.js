@@ -14,6 +14,17 @@ Number.prototype.format = function(n, x) {
     return this.toFixed(Math.max(0, ~~n)).replace(new RegExp(re, 'g'), '$&,');
 };
 
+function toogleExplanation() {
+    var explanation = d3.select("#explanation");
+
+    if(explanation.style("visibility") == "visible") {
+        explanation.style("visibility", "hidden");
+    } else {
+        explanation.style("visibility", "visible");
+    }
+
+}
+
 
 // Get the contents of a textbox and checkbox, and alert them to the user
 function changeBuildingClass() {
@@ -189,6 +200,8 @@ function updateBuildingDetails(buildingAddress) {
     details.style("visibility", "visible");
     StdDetails.style("visibility", "visible");
     DeepDetails.style("visibility", "visible");
+
+    d3.select("#explanation").style("visibility", "hidden");
 
     //console.log(dataset);
 };
